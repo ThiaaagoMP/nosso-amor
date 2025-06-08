@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Amor em Cada Dia de 2025</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #fff0f5, #fff);
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 100%;
+            margin: auto;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #c8102e;
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2em, 8vw, 2.5em);
+            margin-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #555;
+            font-size: clamp(1em, 4vw, 1.2em);
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+        h3.month-name {
+            color: #c8102e;
+            font-size: clamp(1.2em, 5vw, 1.4em);
+            margin: 20px 0 10px;
+            grid-column: 1 / -1;
+        }
+
+        /* Estilos do calendário */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            padding: 10px;
+            margin-bottom: 40px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .calendar div {
+            padding: clamp(10px, 3vw, 12px);
+            background: #f9f9f9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: clamp(0.8em, 3.5vw, 0.9em);
+            text-align: center;
+        }
+        .calendar div:hover {
+            background: #ffd1d1;
+        }
+        .calendar .header {
+            background: #c8102e;
+            color: white;
+            font-weight: bold;
+            cursor: default;
+            padding: clamp(8px, 2.5vw, 10px);
+        }
+        .calendar .header:hover {
+            background: #c8102e;
+        }
+        .calendar .special-day {
+            background: #ff9999;
+            color: white;
+            font-weight: bold;
+        }
+        .calendar .empty {
+            background: #eee;
+            cursor: default;
+        }
+        .calendar .empty:hover {
+            background: #eee;
+        }
+
+        /* Estilos do modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 10px;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: left;
+            position: relative;
+        }
+        .modal-content h2 {
+            color: #c8102e;
+            font-size: clamp(1.2em, 4vw, 1.4em);
+            margin-bottom: 10px;
+        }
+        .modal-content p {
+            font-size: clamp(0.9em, 3.5vw, 1em);
+            line-height: 1.5;
+        }
+        .modal-content img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: clamp(1.2em, 4vw, 1.5em);
+            cursor: pointer;
+            color: #c8102e;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .calendar {
+                gap: 3px;
+                margin-bottom: 30px;
+            }
+            .calendar div {
+                padding: 8px;
+                font-size: 0.8em;
+            }
+            .calendar .header {
+                padding: 6px;
+                font-size: 0.7em;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            h2.subtitle {
+                font-size: 1em;
+            }
+            h3.month-name {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Eternizando Nosso Amor</h1>
+        <h2 class="subtitle">Cada dia com você é uma memória para guardar no coração</h2>
+        <div id="calendars"></div>
+    </div>
+
+    <!-- Modal para exibir detalhes -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2 id="modal-date"></h2>
+            <div id="modal-description"></div>
+        </div>
+    </div>
+
+    <script>
+        // Dados dos dias especiais
+        const specialDays = [
+            {
+                date: "2025-02-01",
+                description: "Nosso primeiro encontro! O dia onde pude te ver pessoalmente pela primeira vez, e começar uma linda história de amor."
+            },
+            {
+                date: "2025-02-12",
+                description: "Seu aniversário! Um dia que queria muito estar presente, parabéns meu amor <3"
+            },
+            {
+                date: "2025-02-15",
+                description: "Nossa primeira foto juntos! Um dia onde comemoramos seu aniversário e conheci melhor você e sua família.",
+                imageUrl: "images/15-02.jpeg"
+            },
+            {
+                date: "2025-02-23",
+                description: "Dia inesquecível que pedi você em namoro, lembro como se fosse hoje de você sorrindo e me abraçando, foi um dia muito especial para mim, extremamente feliz :D. Infelizmente não tiramos nenhuma foto juntos :(",
+            },
+            {
+                date: "2025-03-04",
+                description: "Primeiro passeio junto com a sua família, um dia onde me senti muito bem-vindo e feliz.",
+                imageUrl: "images/04-03.jpeg"
+            },
+            {
+                date: "2025-03-23",
+                description: "Nosso primeiro mês de namoro e o aniversário do seu irmão! Um dia onde conheci mais sua família.",
+                imageUrl: "images/23-03.jpeg"
+            },
+            {
+                date: "2025-04-04",
+                description: "Nossa primeira viagem juntos! Foi maravilhoso passar esses dias juntos e criar essas memórias com você.",
+                imageUrl: "images/04-04.jpeg"
+            },
+            {
+                date: "2025-04-05",
+                description: "Mais um dia da nossa viagem! Criando memórias que vão durar para sempre.",
+                imageUrl: "images/05-04.jpeg"
+            },
+            {
+                date: "2025-04-18",
+                description: "Meu aniversário! Fiquei muito feliz de vocês terem vindo, e foi muito bom passar o meu vigésimo aniversário com o amor da minha vida.",
+                imageUrl: "images/18-04.jpeg"
+            },
+            {
+                date: "2025-04-26",
+                description: "Aniversário do seu priminho, um dia que brincamos mais que as crianças e nos divertimos muito.",
+                imageUrl: "images/26-04.jpeg"
+            },
+            {
+                date: "2025-05-12",
+                description: "Meu primeiro ensaio tocando, fico muito feliz de você ter participado desse dia especial para mim.",
+                imageUrl: "images/12-05.jpeg"
+            },
+            {
+                date: "2025-05-24",
+                description: "Comemoramos 3 meses de namoro, saímos juntos e foi muito especial esse momento com você.",
+                imageUrl: "images/24-05.jpeg"
+            },
+            {
+                date: "2025-05-31",
+                description: "Fui te assistir competir na gr, sua dedicação me deixou ainda mais apaixonado."
+            }
+        ];
+
+        // Função para gerar o calendário de um mês
+        function generateCalendar(year, month) {
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDay = new Date(year, month, 1).getDay();
+            const monthNames = [
+                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+            ];
+
+            const calendar = document.createElement("div");
+            calendar.className = "calendar";
+
+            // Nome do mês
+            const monthName = document.createElement("h3");
+            monthName.className = "month-name";
+            monthName.textContent = `${monthNames[month]} ${year}`;
+            calendar.appendChild(monthName);
+
+            // Cabeçalho dos dias da semana (começando no domingo)
+            const daysOfWeek = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+            daysOfWeek.forEach(day => {
+                const div = document.createElement("div");
+                div.className = "header";
+                div.textContent = day;
+                calendar.appendChild(div);
+            });
+
+            // Espaços vazios antes do primeiro dia
+            for (let i = 0; i < firstDay; i++) {
+                const div = document.createElement("div");
+                div.className = "empty";
+                calendar.appendChild(div);
+            }
+
+            // Dias do mês
+            for (let day = 1; day <= daysInMonth; day++) {
+                const div = document.createElement("div");
+                const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                div.textContent = day;
+                div.dataset.date = dateStr;
+
+                // Verifica se é um dia especial
+                const specialDay = specialDays.find(s => s.date === dateStr);
+                if (specialDay) {
+                    div.className = "special-day";
+                    div.addEventListener("click", () => showModal(dateStr, specialDay.description, specialDay.imageUrl));
+                }
+
+                calendar.appendChild(div);
+            }
+
+            return calendar;
+        }
+
+        // Função para exibir o modal
+        function showModal(dateStr, description, imageUrl) {
+            const modal = document.getElementById("modal");
+            const modalDate = document.getElementById("modal-date");
+            const modalDescription = document.getElementById("modal-description");
+
+            const [year, month, day] = dateStr.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
+            modalDate.textContent = date.toLocaleDateString("pt-BR", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                timeZone: "America/Sao_Paulo"
+            });
+            modalDescription.innerHTML = `<p>${description}</p>${imageUrl ? `<img src="${imageUrl}" alt="Memória" style="max-width: 100%; border-radius: 10px;">` : ''}`;
+            modal.style.display = "flex";
+        }
+
+        // Fechar o modal
+        document.querySelector(".close").addEventListener("click", () => {
+            document.getElementById("modal").style.display = "none";
+        });
+
+        // Fechar modal clicando fora
+        document.getElementById("modal").addEventListener("click", (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById("modal").style.display = "none";
+            }
+        });
+
+        // Gerar todos os meses de 2025
+        const calendarsContainer = document.getElementById("calendars");
+        for (let month = 0; month < 12; month++) {
+            calendarsContainer.appendChild(generateCalendar(2025, month));
+        }
+    </script>
+</body>
+</html>
